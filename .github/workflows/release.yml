@@ -1,0 +1,15 @@
+name: Release
+on:
+  release:
+    types: [published]
+permissions:
+  contents: write
+jobs:
+  zip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: zip --recurse-paths system.zip . --exclude ".git/*" ".github/*"
+      - run: gh release upload "${{ github.event.release.tag_name }}" system.zip
+        env:
+          GH_TOKEN: ${{ github.token }}
